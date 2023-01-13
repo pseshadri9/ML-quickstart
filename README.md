@@ -1,7 +1,7 @@
 # Generic ML Experimentation Workflow
 I am tired of rewriting ML experimentation pipelines 40! times so this is a generic template that can be used to start new research projects. 
 ## Requirements
-	idk lol
+	idk lol 2
 ## How 2 Use
 	Edit/write in modules defined below and add/remove modules as necessary 		     
 	to fit project. Make sure to also update each **__init__.py** file so 
