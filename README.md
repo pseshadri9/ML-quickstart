@@ -4,14 +4,14 @@ I am tired of rewriting ML experimentation pipelines 40! times so this is a gene
 	idk lol 2
 ## How 2 Use
 	Edit/write in modules defined below and add/remove modules as necessary 		     
-	to fit project. Make sure to also update each **__init__.py** file so 
+	to fit project. Make sure to also update each [__init__.py] file so 
 	module functions can be invoked from other files.
 	
-	Define run args in **main.py** and update **run.sh** accordingly.
-	run **run.sh** with desired parameters to start a run 
+	Define run args in [main.py] and update [run.sh] accordingly.
+	run [run.sh] with desired parameters to start a run 
 	(however you decide to define "run").
 
-	Use **scratchpad.ipynb** for quick and dirty debugging.
+	Use [scratchpad.ipynb] for quick and dirty debugging.
 ## Modules
 ### data_process 
 	Contains scripts/files to load and process datasets 
@@ -26,7 +26,7 @@ I am tired of rewriting ML experimentation pipelines 40! times so this is a gene
 ###  train_evaluate
 	Contains train/evaluate scripts
 ### utility
-	Whatever extra stuff you want here. Currently putting the **run**
+	Whatever extra stuff you want here. Currently contains the [run.py]
 	script to run an experiment with the desired args
 	
 	
