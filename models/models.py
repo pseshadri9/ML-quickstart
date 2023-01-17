@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import pytorch_lightning as pl
 import torch
 
@@ -15,6 +16,10 @@ class model(pl.LightningModule):
         self.loss = None
     
     def forward(self, x):
+=======
+class NeutralNet:
+    def __init__(args):
+>>>>>>> main
         pass
     
     def configure_optimizers(self):
