@@ -1,5 +1,5 @@
 class NeutralNet:
-    def __init___(args):
+    def __init__(args):
         pass
     def forward(X):
         pass
