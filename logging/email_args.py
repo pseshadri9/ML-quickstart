@@ -7,7 +7,7 @@ DO NOT COMMIT SENSITIVE INFORMATION
 import subprocess
 list_of_ignored_files = str(subprocess.check_output("git ls-files --other", shell=True))
 
-msg = f"""Failed Test!!!! Add \"notification/email_args.py\" to .gitignore to avoid committing sensitive information!!"""
+msg = f"""Failed Test!!!! Add \"logging/email_args.py\" to .gitignore to avoid committing sensitive information!!"""
 
 assert ('email_args.py' in list_of_ignored_files), msg
 
