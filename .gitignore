@@ -6,7 +6,7 @@ logger_runs/*
 !logger_runs/.gitkeep
 
 #exclude email_args.py for sensitive info
-notification/email_args.py
+#notification/email_args.py
 
 #ignore pycache
 /pycache/*

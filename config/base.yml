@@ -1,0 +1,25 @@
+seed: 1265
+dev: False
+
+model_params:
+  #Model parameters
+
+data_params:
+  #Dataset parameters
+  data_path: #Change to your paths to each session
+
+dataloader_params:
+  #Dataloader params
+  batch_size: 256 
+  num_workers: 6
+
+trainer_params:
+  #Pl-lighning trainer Params
+  max_epochs: 10
+  accelerator: "gpu"
+  devices: 1
+
+logging_params:
+  save_dir: "logger_runs/logs/"
+  name: "BaseConfig"
+  manifest_path: "logger_runs/manifest"

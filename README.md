@@ -13,13 +13,13 @@ I am tired of rewriting ML experimentation pipelines 40! times so this is a gene
 
 	Use [scratchpad.ipynb] for quick and dirty debugging.
 ## Modules
-### data_process 
-	Contains scripts/files to load and process datasets 
+### data_utils 
+	Contains scripts/files to load and process datasets and dataloaders 
 ### datasets
-	Put your datasets here. Files in this folder will not be git tracked 
+	Directory for symlinks to datasets for easy access (if applicable). Files in this folder will not be git tracked 
 	by default
 ### logger_runs
-	Logged training/evaluation runs will be saved to this directory. 
+	Logged training/evaluation runs will be saved to this directory.
 	Files in this folder will not be git tracked by default.
 ### models
 	Contains model declaration classes
