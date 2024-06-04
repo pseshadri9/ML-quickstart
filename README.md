@@ -23,8 +23,6 @@ I am tired of rewriting ML experimentation pipelines 40! times so this is a gene
 	Files in this folder will not be git tracked by default.
 ### models
 	Contains model declaration classes
-###  train_evaluate
-	Contains train/evaluate scripts
 ### utility
 	Whatever extra stuff you want here. Currently contains the [run.py]
 	script to run an experiment with the desired args
