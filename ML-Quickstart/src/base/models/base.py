@@ -29,9 +29,10 @@ class LightningModel(LightningModule):
         loss: str,
         learning_rate: float = 1e-3,
         feature_extractor: torch.nn.Module = None,
+        augmentations: torch.nn.Module = torch.nn.Identity(),  # Training augmentations
     ):
         super().__init__()
-        self.save_hyperparameters(ignore=["feature_extractor"])
+        self.save_hyperparameters(ignore=["feature_extractor", "augmentations"])
 
         # Create the model based on the model_type
         if model_type == "":
@@ -49,6 +50,7 @@ class LightningModel(LightningModule):
         self.lr = learning_rate
 
         self.feature_extractor = feature_extractor
+        self.augmentation = augmentations
         self.metrics = Metrics()
 
     def to_device(
@@ -96,7 +98,9 @@ class LightningModel(LightningModule):
         return {LOSS: loss, OUTPUT: output}
 
     def training_step(self, batch, batch_idx: int) -> torch.Tensor:
-        output_dict = self.common_step(batch, stage=TRAIN)
+        audio, labels = batch
+        audio = self.augmentations(audio)
+        output_dict = self.common_step((audio, labels), stage=TRAIN)
         return output_dict[LOSS]
 
     def validation_step(self, batch, batch_idx: int) -> torch.Tensor:

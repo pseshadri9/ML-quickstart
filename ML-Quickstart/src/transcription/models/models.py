@@ -24,13 +24,14 @@ class TranscriptionModel(LightningModule):
         loss: str,
         learning_rate: float = 1e-3,
         feature_extractor: torch.nn.Module = None,
+        augmentations: torch.nn.Module = torch.nn.Identity(),
         num_classes: int = NUM_CLASSES,
         mel_bins: int = MSPEC_PARAMS["n_mels"],
         midfeat: int = 1792,
         momentum: float = 0.01,
     ):
         super().__init__()
-        self.save_hyperparameters(ignore=["feature_extractor"])
+        self.save_hyperparameters(ignore=["feature_extractor", "augmentations"])
         self.num_classes = num_classes
 
         # Create the model based on the model_type
@@ -53,6 +54,7 @@ class TranscriptionModel(LightningModule):
         self.lr = learning_rate
 
         self.feature_extractor = feature_extractor
+        self.augmentations = augmentations
         self.frame_metric = FramewiseMetrics(num_classes)
         self.note_metric = NoteLevelMetrics(num_classes)
 
@@ -98,14 +100,16 @@ class TranscriptionModel(LightningModule):
         return {LOSS: loss, OUTPUT: output}
 
     def training_step(self, batch, batch_idx: int) -> torch.Tensor:
-        output_dict = self.common_step(batch, stage=TRAIN)
+        audio, labels = batch
+        audio = self.augmentations(audio)
+        output_dict = self.common_step((audio, labels), stage=TRAIN)
         return output_dict[LOSS]
 
     def validation_step(self, batch, batch_idx: int) -> torch.Tensor:
         output_dict = self.common_step(batch, stage=VAL)
         self.frame_metric.update(self.to_device(output_dict[OUTPUT], cpu=True), self.to_device(batch[1], cpu=True))
         # For now, reserve note metrics for testing for speed
-        # self.note_metric.update(self.to_device(output_dict[OUTPUT], cpu=True), self.to_device(batch[1], cpu=True))
+        self.note_metric.update(self.to_device(output_dict[OUTPUT], cpu=True), self.to_device(batch[1], cpu=True))
         return output_dict[LOSS]
 
     def test_step(self, batch, batch_idx: int) -> torch.Tensor:
@@ -116,7 +120,7 @@ class TranscriptionModel(LightningModule):
 
     def common_epoch_end(self, stage: Literal["train", "val", "test"] = VAL):
         self.log_dict({f"{stage}_{k}": v for k, v in self.frame_metric.compute().items()}, prog_bar=True)
-        if stage == "test":
+        if stage in (TEST,):
             self.log_dict({f"{stage}_{k}": v for k, v in self.note_metric.compute().items()}, prog_bar=True)
 
     def on_validation_epoch_end(self):
@@ -129,11 +133,15 @@ class TranscriptionModel(LightningModule):
         optimizer = torch.optim.Adam(self.parameters(), lr=self.lr)
 
         """
-        reduce LR by a factor of 0.9 every 10000 steps
+        reduce LR by a factor of 0.9 every 3333 steps*
+
+        Original Paper uses 10000 steps per batch size of 12,
+        we decrease the steps by a factor of 1/3 to account for a batch size of 36 (3x samples)
+
         TODO: move args to hydra config
         """
         scheduler = torch.optim.lr_scheduler.StepLR(optimizer, 1, gamma=0.9)
         return {
             "optimizer": optimizer,
-            "lr_scheduler": {"scheduler": scheduler, "interval": "step", "frequency": 10000},
+            "lr_scheduler": {"scheduler": scheduler, "interval": "step", "frequency": 15000},
         }
